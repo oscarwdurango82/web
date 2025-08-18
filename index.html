@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Iglesia Cristiana Aleluya</title>
+  <link rel="icon" href="images/logo.jpg" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <script defer src="assets/js/app.js"></script>
+  <style>
+    /* ---- Estilos del slider ---- */
+    .hero {
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .slider {
+      display: flex;
+      transition: transform 1s ease-in-out;
+    }
+
+    .slide {
+      min-width: 100%;
+      flex-shrink: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .slide img {
+      width: 80%;
+      height: 80%;
+      object-fit: contain;
+      display: block;
+      margin: 0 auto;
+    }
+
+    /* Botones de navegación */
+    .controles {
+      position: absolute;
+      top: 50%;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      transform: translateY(-50%);
+      padding: 0 20px;
+    }
+
+    .boton {
+      background: rgba(0,0,0,0.5);
+      color: white;
+      border: none;
+      font-size: 30px;
+      padding: 10px 15px;
+      cursor: pointer;
+      border-radius: 50%;
+      transition: background 0.3s;
+    }
+
+    .boton:hover {
+      background: rgba(0,0,0,0.8);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero {
+        height: auto;
+        min-height: 50vh;
+      }
+      .slide {
+        height: auto;
+      }
+      .slide img {
+        width: 80%;
+        height: auto;
+        max-height: 80%;
+        margin: 0 auto;
+      }
+    }
+
+    /* 🔹 Centrado horizontal para Bienvenidos */
+    #inicio {
+      text-align: center;
+      padding: 20px 0;
+    }
+
+    #inicio .cta-row {
+      display: inline-flex;
+      gap: 15px;
+      margin-top: 15px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      font-weight: bold;
+      background: #007bff;
+      color: #fff;
+      transition: 0.3s;
+    }
+
+    .btn:hover {
+      background: #0056b3;
+    }
+
+    .btn.outline {
+      background: transparent;
+      border: 2px solid #007bff;
+      color: #007bff;
+    }
+
+    .btn.outline:hover {
+      background: #007bff;
+      color: #fff;
+    }
+
+    /* 🔹 Estilo para botón amarillo */
+    .btn.yellow {
+      background: #FFD700;
+      color: #000;
+    }
+
+    .btn.yellow:hover {
+      background: #e6c200;
+    }
+
+    /* 🔹 Estilo para botón PSE (azul oscuro) */
+    .btn.blue {
+      background: #004aad;
+      color: #fff;
+    }
+
+    .btn.blue:hover {
+      background: #003080;
+    }
+
+    /* 🔹 Estilo para sección de donaciones */
+    #donacion {
+      text-align: center;
+      padding: 40px 20px;
+      background: #fffbea;
+      border-radius: 10px;
+      margin-top: 30px;
+    }
+    #donacion h2 {
+      margin-bottom: 15px;
+      color: #b58900;
+    }
+    #donacion p {
+      color: #222; /* Letras más oscuras */
+      font-weight: 600;
+    }
+    #donacion ul {
+      list-style: none;
+      padding: 0;
+    }
+    #donacion li {
+      font-size: 18px;
+      margin: 8px 0;
+      font-weight: bold;
+      color: #111; /* Letras fuertes para mejor contraste */
+    }
+    #donacion a {
+      color: #007bff;
+      text-decoration: none;
+    }
+    #donacion a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav">
+      <div class="brand">
+        <img src="images/logo.jpg" alt="Iglesia Cristiana Aleluya" class="logo" />
+        
+        <div class="title-container" style="text-align:center;">
+          <span class="title">Iglesia Cristiana Aleluya.</span>
+          <p style="margin-top:5px; font-size:18px; font-weight:500;">Familias Completas.</p>
+        </div>
+      </div>
+      <nav class="menu">
+        <button data-section="inicio" class="nav-btn active">Inicio</button>
+        <button data-section="quienes" class="nav-btn">Quiénes Somos</button>
+        <button data-section="ministerios" class="nav-btn">Ministerios</button>
+        <button data-section="eventos" class="nav-btn">Eventos</button>
+        <button data-section="envivo" class="nav-btn live">🔴 En Vivo</button>
+	<button data-section="contacto" class="nav-btn">Contacto</button>
+        <button data-section="donacion" class="nav-btn">Donación</button>
+        
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Inicio -->
+    <section id="inicio" class="section visible">
+      <div class="hero" id="hero">
+        <div class="slider" id="slider">
+          <div class="slide"><img src="images/fondo.jpg" alt="Imagen 1"></div>
+          <div class="slide"><img src="images/logo1.png" alt="Imagen 2"></div>
+          <div class="slide"><img src="images/logo.jpg" alt="Imagen 3"></div>
+        </div>
+        <!-- Controles -->
+        <div class="controles">
+          <button class="boton" id="prev">&#10094;</button>
+          <button class="boton" id="next">&#10095;</button>
+        </div>
+      </div>
+
+      <h1>Bienvenidos</h1>
+      <p class="verse">“Entrad por sus puertas con acción de gracias...” — Salmos 100:4</p>
+      <div class="cta-row">
+        <a href="#contacto" class="btn">Contáctanos</a>
+        <a href="#donacion" class="btn yellow">Donación</a>
+        <a href="#envivo" class="btn outline">Ver En Vivo</a>
+      </div>
+    </section>
+
+    <!-- Quiénes Somos -->
+    <section id="quienes" class="section">
+      <h2>Quiénes Somos</h2>
+      <p>Somos una iglesia cristiana formando familias completas en Cristo y jóvenes con pasión por Jesús y la comunidad.</p>
+      <div class="grid-3 cards">
+        <article class="card"><h3>Misión</h3><p style="text-align: justify;">Somos una iglesia cristiana que proclama el evangelio de Jesucristo con poder y amor, guiada por el Espíritu Santo...</p></article>
+        <article class="card"><h3>Visión</h3><p style="text-align: justify;">Ser una iglesia que impacte a las naciones formando familias completas en Cristo...</p></article>
+        <article class="card"><h3>Qué creemos</h3><p>Dios, Su Palabra, y la obra del Espíritu Santo entre nosotros.</p></article>
+      </div>
+    </section>
+
+    <!-- Ministerios -->
+    <section id="ministerios" class="section">
+      <h2>Ministerios</h2>
+      <div class="grid-3 cards">
+        <article class="card"><h3>Alabanza</h3><p>Adoración que exalta a Jesús.</p></article>
+        <article class="card"><h3>Jóvenes</h3><p>Formación y propósito para nuevas generaciones.</p></article>
+        <article class="card"><h3>Niños</h3><p>Sembrando fe con amor y diversión.</p></article>
+      </div>
+    </section>
+
+    <!-- Eventos -->
+    <section id="eventos" class="section">
+      <h2>Próximos Eventos</h2>
+      <ul class="events">
+        <li><strong>Domingo 9:00 AM</strong> — Culto Dominical</li>
+        <li><strong>Martes 7:00 PM</strong> — Discipulado</li>
+        <li><strong>Miércoles 7:00 PM</strong> — Estudio bíblico</li>
+        <li><strong>Viernes 7:30 PM</strong> — Culto de sanación y Milagros</li>
+      </ul>
+    </section>
+
+    <!-- En Vivo -->
+    <section id="envivo" class="section">
+      <h2>Transmisión en Vivo</h2>
+      <div class="live-embed">
+        <iframe
+          src="https://www.facebook.com/plugins/video.php?href=https://www.facebook.com/share/1EZ6zw6ncx/&show_text=false&width=900"
+          width="900" height="506" style="border:none;overflow:hidden;max-width:100%"
+          scrolling="no" frameborder="0" allowfullscreen="true"
+          allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
+      </div>
+      <div class="cta-row">
+        <a class="btn" href="https://web.facebook.com/people/Iglesia-Cristiana-Aleluya/100086964918191/" target="_blank" rel="noopener">Abrir en Facebook</a>
+        <a class="btn outline" href="https://www.instagram.com/iglesiaaleluya" target="_blank" rel="noopener">Instagram</a>
+      </div>
+    </section>
+
+    <!-- Donaciones -->
+    <section id="donacion" class="section">
+      <h2>Donaciones</h2>
+      <p>Apoya la obra de Dios a través de tus aportes. Puedes hacerlo en las siguientes cuentas:</p>
+      <ul>
+        <li>📱 <a href="https://www.nequi.com.co/" target="_blank" rel="noopener"><strong>Nequi: xxxxxxxxx</strong></a></li>
+        <li>📱 <a href="https://daviplata.com/" target="_blank" rel="noopener"><strong>Daviplata: xxxxxxxxxx</strong></a></li>
+        <li>🏦 <a href="https://www.grupobancolombia.com/" target="_blank" rel="noopener"><strong>Bancolombia: xxxxxxxxxx</strong></a></li>
+        <li>🏦 <a href="https://www.bancodebogota.com/" target="_blank" rel="noopener"><strong>Banco de Bogotá: xxxxxxxxxx</strong></a></li>
+      </ul>
+
+      <!-- Botón azul PSE centrado -->
+      <div style="margin-top: 20px; text-align: center;">
+        <a href="https://www.pse.com.co" target="_blank" rel="noopener" class="btn blue">💳 Donar con PSE</a>
+      </div>
+    </section>
+
+    <!-- Contacto -->
+    <section id="contacto" class="section">
+      <h2>Contacto</h2>
+      <form id="contactForm" class="contact-form">
+        <input type="text" name="nombre" placeholder="Tu nombre" required />
+        <input type="email" name="correo" placeholder="Escribe tu correo" required />
+        <textarea name="mensaje" rows="5" placeholder="Escribe tu mensaje" required></textarea>
+        <button type="submit" class="btn">Enviar</button>
+        <p id="formStatus" class="status"></p>
+      </form>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <small>© 2025 Iglesia Cristiana Aleluya • Todos los derechos reservados</small>
+    </div>
+  </footer>
+
+  <script>
+    /* ----- SLIDER ----- */
+    const slider = document.getElementById('slider');
+    const slides = document.querySelectorAll('.slide');
+    const hero = document.getElementById('hero');
+    let index = 0;
+    const tiempo = 2000;
+
+    function mostrarSlide() {
+      slider.style.transition = 'transform 1s ease-in-out';
+      slider.style.transform = `translateX(-${index * 100}%)`;
+    }
+
+    function siguiente() {
+      index++;
+      if (index >= slides.length) {
+        index = 0;
+        slider.style.transition = 'none';
+        slider.style.transform = `translateX(0%)`;
+        void slider.offsetWidth;
+        slider.style.transition = 'transform 1s ease-in-out';
+      }
+      mostrarSlide();
+    }
+
+    function anterior() {
+      index--;
+      if (index < 0) {
+        index = slides.length - 1;
+        slider.style.transition = 'none';
+        slider.style.transform = `translateX(-${index * 100}%)`;
+        void slider.offsetWidth;
+        slider.style.transition = 'transform 1s ease-in-out';
+      }
+      mostrarSlide();
+    }
+
+    let intervalo = setInterval(siguiente, tiempo);
+
+    document.getElementById("next").addEventListener("click", () => {
+      siguiente();
+      reiniciar();
+    });
+
+    document.getElementById("prev").addEventListener("click", () => {
+      anterior();
+      reiniciar();
+    });
+
+    function reiniciar() {
+      clearInterval(intervalo);
+      intervalo = setInterval(siguiente, tiempo);
+    }
+
+    hero.addEventListener("mouseenter", () => clearInterval(intervalo));
+    hero.addEventListener("mouseleave", reiniciar);
+
+    /* ----- NAVEGACIÓN ENTRE SECCIONES ----- */
+    const navBtns = document.querySelectorAll(".nav-btn");
+    const sections = document.querySelectorAll(".section");
+
+    navBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        navBtns.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        let target = btn.getAttribute("data-section");
+        sections.forEach(sec => {
+          sec.classList.remove("visible");
+          if (sec.id === target) {
+            sec.classList.add("visible");
+            window.location.hash = target;
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>
+
+
+
+
+
+
