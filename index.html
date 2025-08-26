@@ -5,173 +5,97 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Iglesia Cristiana Aleluya</title>
   <link rel="icon" href="images/logo.jpg" />
-  <link rel="stylesheet" href="assets/css/style.css" />
-  <script defer src="assets/js/app.js"></script>
   <style>
-    /* ---- Estilos del slider ---- */
-    .hero {
-      width: 100%;
-      height: 100vh;
-      overflow: hidden;
-      position: relative;
+    :root{
+      --azul:#007bff;
+      --azul-osc:#0056b3;
+      --amarillo:#FFD700;
+      --pse:#004aad;
+      --texto:#111;
     }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:#222;background:#fafafa}
+    a{text-decoration:none}
 
-    .slider {
-      display: flex;
-      transition: transform 1s ease-in-out;
-    }
+    /* ---- Header ---- */
+    .site-header{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid #eee}
+    .container{max-width:1100px;margin:0 auto;padding:0 16px}
+    .nav{display:flex;align-items:center;justify-content:space-between;height:70px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{width:52px;height:52px;border-radius:50%;object-fit:cover}
+    .title{display:block;font-weight:800;font-size:18px}
+    .menu{display:flex;gap:8px;flex-wrap:wrap}
+    .nav-btn{border:none;background:transparent;padding:10px 14px;border-radius:8px;font-weight:700;cursor:pointer}
+    .nav-btn:hover,.nav-btn.active{background:var(--azul);color:#fff}
+    .nav-btn.live{color:#d10000;font-weight:800}
 
-    .slide {
-      min-width: 100%;
-      flex-shrink: 0;
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+    /* ---- Secciones ---- */
+    main .section{display:none;padding:32px 0}
+    main .section.visible{display:block}
+    h1,h2{margin:12px 0}
+    p{line-height:1.6}
 
-    .slide img {
-      width: 80%;
-      height: 80%;
-      object-fit: contain;
-      display: block;
-      margin: 0 auto;
-    }
+    /* ---- Hero / Slider ---- */
+    .hero{width:100%;height:70vh;min-height:420px;max-height:92vh;overflow:hidden;position:relative;border-radius:16px;background:#000}
+    .slider{display:flex;height:100%;will-change:transform}
+    .slide{min-width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#000}
+    .slide img{width:80%;height:80%;object-fit:contain;display:block;margin:0 auto;filter:drop-shadow(0 12px 24px rgba(0,0,0,.35));cursor:pointer;transition:transform .4s ease}
+    /* Zoom activo */
+    .slide img.zoom{transform:scale(1.7);z-index:50;cursor:zoom-out}
 
-    /* Botones de navegación */
-    .controles {
-      position: absolute;
-      top: 50%;
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      transform: translateY(-50%);
-      padding: 0 20px;
-    }
+    /* Controles */
+    .controles{position:absolute;top:50%;left:0;right:0;display:flex;justify-content:space-between;transform:translateY(-50%);padding:0 10px}
+    .boton{background:rgba(0,0,0,.45);color:#fff;border:none;font-size:28px;width:44px;height:44px;border-radius:50%;cursor:pointer;transition:background .3s}
+    .boton:hover{background:rgba(0,0,0,.75)}
 
-    .boton {
-      background: rgba(0,0,0,0.5);
-      color: white;
-      border: none;
-      font-size: 30px;
-      padding: 10px 15px;
-      cursor: pointer;
-      border-radius: 50%;
-      transition: background 0.3s;
-    }
+    /* CTA fila */
+    #inicio{text-align:center}
+    #inicio .cta-row{display:inline-flex;gap:12px;margin-top:14px;flex-wrap:wrap;justify-content:center}
 
-    .boton:hover {
-      background: rgba(0,0,0,0.8);
-    }
+    /* Botones */
+    .btn{padding:10px 18px;border-radius:10px;border:none;cursor:pointer;font-weight:800;background:var(--azul);color:#fff;display:inline-block}
+    .btn:hover{background:var(--azul-osc)}
+    .btn.outline{background:transparent;border:2px solid var(--azul);color:var(--azul)}
+    .btn.outline:hover{background:var(--azul);color:#fff}
+    .btn.yellow{background:var(--amarillo);color:#000}
+    .btn.yellow:hover{filter:brightness(.95)}
+    .btn.blue{background:var(--pse);color:#fff}
+    .btn.blue:hover{filter:brightness(.9)}
+
+    /* Tarjetas */
+    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .card{background:#fff;border:1px solid #eee;border-radius:12px;padding:16px}
+    .events{list-style:none;padding:0;margin:0}
+    .events li{background:#fff;border:1px solid #eee;border-radius:10px;padding:10px 12px;margin-bottom:10px}
+
+    /* Donación */
+    #donacion{background:#fffbea;border:1px solid #ffe8a3;border-radius:12px;text-align:center;padding:28px 20px}
+    #donacion h2{color:#b58900;margin-bottom:10px}
+    #donacion p{color:#222;font-weight:600}
+    #donacion ul{list-style:none;padding:0;margin:10px 0}
+    #donacion li{font-size:18px;margin:8px 0;font-weight:700;color:var(--texto)}
+    #donacion a{color:var(--azul)}
+    #donacion a:hover{text-decoration:underline}
+
+    /* Contacto */
+    .contact-form{max-width:620px;margin:0 auto;display:grid;gap:10px}
+    .contact-form input,.contact-form textarea{padding:12px 14px;border:1px solid #ddd;border-radius:10px;font:inherit}
+    .status{min-height:20px}
+
+    /* Footer */
+    .site-footer{border-top:1px solid #eee;background:#fff}
+    .site-footer small{display:block;text-align:center;padding:18px 0;color:#666}
 
     /* Responsive */
-    @media (max-width: 768px) {
-      .hero {
-        height: auto;
-        min-height: 50vh;
-      }
-      .slide {
-        height: auto;
-      }
-      .slide img {
-        width: 80%;
-        height: auto;
-        max-height: 80%;
-        margin: 0 auto;
-      }
+    @media (max-width: 900px){
+      .cards{grid-template-columns:1fr 1fr}
+      .hero{height:56vh}
     }
-
-    /* 🔹 Centrado horizontal para Bienvenidos */
-    #inicio {
-      text-align: center;
-      padding: 20px 0;
-    }
-
-    #inicio .cta-row {
-      display: inline-flex;
-      gap: 15px;
-      margin-top: 15px;
-    }
-
-    .btn {
-      padding: 10px 20px;
-      border-radius: 8px;
-      border: none;
-      cursor: pointer;
-      text-decoration: none;
-      font-weight: bold;
-      background: #007bff;
-      color: #fff;
-      transition: 0.3s;
-    }
-
-    .btn:hover {
-      background: #0056b3;
-    }
-
-    .btn.outline {
-      background: transparent;
-      border: 2px solid #007bff;
-      color: #007bff;
-    }
-
-    .btn.outline:hover {
-      background: #007bff;
-      color: #fff;
-    }
-
-    /* 🔹 Estilo para botón amarillo */
-    .btn.yellow {
-      background: #FFD700;
-      color: #000;
-    }
-
-    .btn.yellow:hover {
-      background: #e6c200;
-    }
-
-    /* 🔹 Estilo para botón PSE (azul oscuro) */
-    .btn.blue {
-      background: #004aad;
-      color: #fff;
-    }
-
-    .btn.blue:hover {
-      background: #003080;
-    }
-
-    /* 🔹 Estilo para sección de donaciones */
-    #donacion {
-      text-align: center;
-      padding: 40px 20px;
-      background: #fffbea;
-      border-radius: 10px;
-      margin-top: 30px;
-    }
-    #donacion h2 {
-      margin-bottom: 15px;
-      color: #b58900;
-    }
-    #donacion p {
-      color: #222; /* Letras más oscuras */
-      font-weight: 600;
-    }
-    #donacion ul {
-      list-style: none;
-      padding: 0;
-    }
-    #donacion li {
-      font-size: 18px;
-      margin: 8px 0;
-      font-weight: bold;
-      color: #111; /* Letras fuertes para mejor contraste */
-    }
-    #donacion a {
-      color: #007bff;
-      text-decoration: none;
-    }
-    #donacion a:hover {
-      text-decoration: underline;
+    @media (max-width: 680px){
+      .cards{grid-template-columns:1fr}
+      .slide img{width:86%;height:auto;max-height:80%}
+      .menu{gap:4px}
+      .nav-btn{padding:8px 10px}
     }
   </style>
 </head>
@@ -180,10 +104,9 @@
     <div class="container nav">
       <div class="brand">
         <img src="images/logo.jpg" alt="Iglesia Cristiana Aleluya" class="logo" />
-        
         <div class="title-container" style="text-align:center;">
           <span class="title">Iglesia Cristiana Aleluya.</span>
-          <p style="margin-top:5px; font-size:18px; font-weight:500;">Familias Completas.</p>
+          <p style="margin-top:2px;font-size:14px;font-weight:600;color:#666">Familias Completas.</p>
         </div>
       </div>
       <nav class="menu">
@@ -192,9 +115,8 @@
         <button data-section="ministerios" class="nav-btn">Ministerios</button>
         <button data-section="eventos" class="nav-btn">Eventos</button>
         <button data-section="envivo" class="nav-btn live">🔴 En Vivo</button>
-	<button data-section="contacto" class="nav-btn">Contacto</button>
         <button data-section="donacion" class="nav-btn">Donación</button>
-        
+        <button data-section="contacto" class="nav-btn">Contacto</button>
       </nav>
     </div>
   </header>
@@ -205,22 +127,22 @@
       <div class="hero" id="hero">
         <div class="slider" id="slider">
           <div class="slide"><img src="images/fondo.jpg" alt="Imagen 1"></div>
-          <div class="slide"><img src="images/Imagen2.jpg" alt="Imagen 2"></div>
+          <div class="slide"><img src="images/logo1.png" alt="Imagen 2"></div>
           <div class="slide"><img src="images/logo.jpg" alt="Imagen 3"></div>
         </div>
         <!-- Controles -->
         <div class="controles">
-          <button class="boton" id="prev">&#10094;</button>
-          <button class="boton" id="next">&#10095;</button>
+          <button class="boton" id="prev" aria-label="Anterior">&#10094;</button>
+          <button class="boton" id="next" aria-label="Siguiente">&#10095;</button>
         </div>
       </div>
 
-      <h1>Bienvenidos</h1>
-      <p class="verse">“Entrad por sus puertas con acción de gracias...” — Salmos 100:4</p>
+      <h1 style="text-align:center;margin:18px 0 6px">Bienvenidos</h1>
+      <p class="verse" style="text-align:center;margin:0 0 6px">“Entrad por sus puertas con acción de gracias...” — Salmos 100:4</p>
       <div class="cta-row">
-        <a href="#contacto" class="btn">Contáctanos</a>
-        <a href="#donacion" class="btn yellow">Donación</a>
-        <a href="#envivo" class="btn outline">Ver En Vivo</a>
+        <a href="#contacto" class="btn js-link">Contáctanos</a>
+        <a href="#donacion" class="btn yellow js-link">Donación</a>
+        <a href="#envivo" class="btn outline js-link">Ver En Vivo</a>
       </div>
     </section>
 
@@ -228,7 +150,7 @@
     <section id="quienes" class="section">
       <h2>Quiénes Somos</h2>
       <p>Somos una iglesia cristiana formando familias completas en Cristo y jóvenes con pasión por Jesús y la comunidad.</p>
-      <div class="grid-3 cards">
+      <div class="cards">
         <article class="card"><h3>Misión</h3><p style="text-align: justify;">Somos una iglesia cristiana que proclama el evangelio de Jesucristo con poder y amor, guiada por el Espíritu Santo...</p></article>
         <article class="card"><h3>Visión</h3><p style="text-align: justify;">Ser una iglesia que impacte a las naciones formando familias completas en Cristo...</p></article>
         <article class="card"><h3>Qué creemos</h3><p>Dios, Su Palabra, y la obra del Espíritu Santo entre nosotros.</p></article>
@@ -238,7 +160,7 @@
     <!-- Ministerios -->
     <section id="ministerios" class="section">
       <h2>Ministerios</h2>
-      <div class="grid-3 cards">
+      <div class="cards">
         <article class="card"><h3>Alabanza</h3><p>Adoración que exalta a Jesús.</p></article>
         <article class="card"><h3>Jóvenes</h3><p>Formación y propósito para nuevas generaciones.</p></article>
         <article class="card"><h3>Niños</h3><p>Sembrando fe con amor y diversión.</p></article>
@@ -259,14 +181,14 @@
     <!-- En Vivo -->
     <section id="envivo" class="section">
       <h2>Transmisión en Vivo</h2>
-      <div class="live-embed">
+      <div class="live-embed" style="aspect-ratio:16/9;max-width:900px;margin:0 auto">
         <iframe
           src="https://www.facebook.com/plugins/video.php?href=https://www.facebook.com/share/1EZ6zw6ncx/&show_text=false&width=900"
-          width="900" height="506" style="border:none;overflow:hidden;max-width:100%"
+          width="900" height="506" style="border:none;overflow:hidden;max-width:100%;width:100%;height:100%"
           scrolling="no" frameborder="0" allowfullscreen="true"
           allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
       </div>
-      <div class="cta-row">
+      <div class="cta-row" style="margin-top:12px">
         <a class="btn" href="https://web.facebook.com/people/Iglesia-Cristiana-Aleluya/100086964918191/" target="_blank" rel="noopener">Abrir en Facebook</a>
         <a class="btn outline" href="https://www.instagram.com/iglesiaaleluya" target="_blank" rel="noopener">Instagram</a>
       </div>
@@ -277,14 +199,12 @@
       <h2>Donaciones</h2>
       <p>Apoya la obra de Dios a través de tus aportes. Puedes hacerlo en las siguientes cuentas:</p>
       <ul>
-        <li>📱 <a href="https://www.nequi.com.co/" target="_blank" rel="noopener"><strong>Nequi: xxxxxxxxx</strong></a></li>
-        <li>📱 <a href="https://daviplata.com/" target="_blank" rel="noopener"><strong>Daviplata: xxxxxxxxxx</strong></a></li>
-        <li>🏦 <a href="https://www.grupobancolombia.com/" target="_blank" rel="noopener"><strong>Bancolombia: xxxxxxxxxx</strong></a></li>
-        <li>🏦 <a href="https://www.bancodebogota.com/" target="_blank" rel="noopener"><strong>Banco de Bogotá: xxxxxxxxxx</strong></a></li>
+        <li>📱 <a href="https://www.nequi.com.co/" target="_blank" rel="noopener"><strong>Nequi: 3001234567</strong></a></li>
+        <li>📱 <a href="https://daviplata.com/" target="_blank" rel="noopener"><strong>Daviplata: 3019876543</strong></a></li>
+        <li>🏦 <a href="https://www.grupobancolombia.com/" target="_blank" rel="noopener"><strong>Bancolombia: 123-456789-01</strong></a></li>
+        <li>🏦 <a href="https://www.bancodebogota.com/" target="_blank" rel="noopener"><strong>Banco de Bogotá: 9876543210</strong></a></li>
       </ul>
-
-      <!-- Botón azul PSE centrado -->
-      <div style="margin-top: 20px; text-align: center;">
+      <div style="margin-top: 20px;">
         <a href="https://www.pse.com.co" target="_blank" rel="noopener" class="btn blue">💳 Donar con PSE</a>
       </div>
     </section>
@@ -309,83 +229,105 @@
   </footer>
 
   <script>
-    /* ----- SLIDER ----- */
+    /* =================== SLIDER INFINITO =================== */
     const slider = document.getElementById('slider');
-    const slides = document.querySelectorAll('.slide');
-    const hero = document.getElementById('hero');
-    let index = 0;
-    const tiempo = 2000;
+    const hero   = document.getElementById('hero');
+    let slides, index = 1, intervalo, zoomActivo = false;
 
-    function mostrarSlide() {
-      slider.style.transition = 'transform 1s ease-in-out';
-      slider.style.transform = `translateX(-${index * 100}%)`;
-    }
+    // Crear clones
+    const makeClones = () => {
+      const first = slider.children[0].cloneNode(true);
+      const last  = slider.children[slider.children.length - 1].cloneNode(true);
+      first.id = 'first-clone';
+      last.id  = 'last-clone';
+      slider.appendChild(first);
+      slider.insertBefore(last, slider.firstElementChild);
+    };
+    makeClones();
 
-    function siguiente() {
-      index++;
-      if (index >= slides.length) {
-        index = 0;
-        slider.style.transition = 'none';
-        slider.style.transform = `translateX(0%)`;
-        void slider.offsetWidth;
-        slider.style.transition = 'transform 1s ease-in-out';
+    slides = slider.querySelectorAll('.slide');
+    const transitionMs = 1000, pausaMs = 2000;
+
+    const setTransition = (on) => {
+      slider.style.transition = on ? `transform ${transitionMs}ms ease-in-out` : 'none';
+    };
+    const goToIndex = (i, withTransition = true) => {
+      if (zoomActivo) return; // si hay zoom no mover
+      setTransition(withTransition);
+      slider.style.transform = `translateX(-${i * 100}%)`;
+    };
+    goToIndex(index, false);
+
+    const siguiente = () => { index++; goToIndex(index, true); };
+    const anterior = () => { index--; goToIndex(index, true); };
+
+    slider.addEventListener('transitionend', () => {
+      slides = slider.querySelectorAll('.slide');
+      if (slides[index]?.id === 'first-clone') {
+        index = slides.length - 2;
+        goToIndex(index, false);
+      } else if (slides[index]?.id === 'last-clone') {
+        index = 1;
+        goToIndex(index, false);
       }
-      mostrarSlide();
-    }
-
-    function anterior() {
-      index--;
-      if (index < 0) {
-        index = slides.length - 1;
-        slider.style.transition = 'none';
-        slider.style.transform = `translateX(-${index * 100}%)`;
-        void slider.offsetWidth;
-        slider.style.transition = 'transform 1s ease-in-out';
-      }
-      mostrarSlide();
-    }
-
-    let intervalo = setInterval(siguiente, tiempo);
-
-    document.getElementById("next").addEventListener("click", () => {
-      siguiente();
-      reiniciar();
     });
 
-    document.getElementById("prev").addEventListener("click", () => {
-      anterior();
-      reiniciar();
+    const start = () => { if (!zoomActivo) intervalo = setInterval(siguiente, pausaMs + transitionMs); };
+    const stop  = () => { clearInterval(intervalo); };
+
+    start();
+
+    document.getElementById('next').addEventListener('click', () => { if (!zoomActivo){ stop(); siguiente(); start(); }});
+    document.getElementById('prev').addEventListener('click', () => { if (!zoomActivo){ stop(); anterior(); start(); }});
+
+    hero.addEventListener('mouseenter', () => { if (!zoomActivo) stop(); });
+    hero.addEventListener('mouseleave', () => { if (!zoomActivo) start(); });
+
+    // Zoom con click
+    document.querySelectorAll('.slide img').forEach(img => {
+      img.addEventListener('click', () => {
+        if (img.classList.contains('zoom')) {
+          img.classList.remove('zoom');
+          zoomActivo = false;
+          start();
+        } else {
+          document.querySelectorAll('.slide img').forEach(i => i.classList.remove('zoom'));
+          img.classList.add('zoom');
+          zoomActivo = true;
+          stop();
+        }
+      });
     });
 
-    function reiniciar() {
-      clearInterval(intervalo);
-      intervalo = setInterval(siguiente, tiempo);
-    }
-
-    hero.addEventListener("mouseenter", () => clearInterval(intervalo));
-    hero.addEventListener("mouseleave", reiniciar);
-
-    /* ----- NAVEGACIÓN ENTRE SECCIONES ----- */
-    const navBtns = document.querySelectorAll(".nav-btn");
+    /* =================== NAVEGACIÓN ENTRE SECCIONES =================== */
+    const navBtns  = document.querySelectorAll(".nav-btn");
     const sections = document.querySelectorAll(".section");
+
+    const showSection = (id) => {
+      sections.forEach(sec => sec.classList.toggle("visible", sec.id === id));
+      navBtns.forEach(btn => btn.classList.toggle("active", btn.dataset.section === id));
+    };
 
     navBtns.forEach(btn => {
       btn.addEventListener("click", () => {
-        navBtns.forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        let target = btn.getAttribute("data-section");
-        sections.forEach(sec => {
-          sec.classList.remove("visible");
-          if (sec.id === target) {
-            sec.classList.add("visible");
-            window.location.hash = target;
-          }
-        });
+        showSection(btn.dataset.section);
       });
+    });
+
+    /* =================== FORMULARIO =================== */
+    const form = document.getElementById("contactForm");
+    const formStatus = document.getElementById("formStatus");
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      formStatus.textContent = "✅ Mensaje enviado correctamente (demo)";
+      form.reset();
     });
   </script>
 </body>
 </html>
+
+
 
 
 
