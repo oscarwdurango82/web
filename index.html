@@ -82,6 +82,18 @@
     .contact-form input,.contact-form textarea{padding:12px 14px;border:1px solid #ddd;border-radius:10px;font:inherit}
     .status{min-height:20px}
 
+    /* Biblia y Música */
+    #biblia .biblia-controls{max-width:900px;margin:0 auto 12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:center}
+    #biblia input[type="text"]{padding:10px 12px;border-radius:8px;border:1px solid #ddd;width:320px;max-width:80%}
+    #biblia .small{font-size:13px;color:#666}
+    #biblia .result{max-width:900px;margin:12px auto;background:#fff;border:1px solid #eee;border-radius:10px;padding:16px;line-height:1.6}
+    #biblia .verse{margin:6px 0;padding:6px 8px;border-radius:6px}
+    #musica audio{width:100%;margin-top:12px}
+
+    /* selects Biblia */
+    #biblia select{padding:10px 12px;border-radius:8px;border:1px solid #ddd;background:#fff;color:#111}
+    #biblia .small-note{font-size:13px;color:#666;margin-top:6px}
+
     /* Footer */
     .site-footer{border-top:1px solid #eee;background:#fff}
     .site-footer small{display:block;text-align:center;padding:18px 0;color:#666}
@@ -116,6 +128,8 @@
         <button data-section="eventos" class="nav-btn">Eventos</button>
         <button data-section="envivo" class="nav-btn live">🔴 En Vivo</button>
         <button data-section="donacion" class="nav-btn">Donación</button>
+        <button data-section="biblia" class="nav-btn">Leer la Biblia</button>
+        <button data-section="musica" class="nav-btn">Música</button>
         <button data-section="contacto" class="nav-btn">Contacto</button>
       </nav>
     </div>
@@ -209,6 +223,57 @@
       </div>
     </section>
 
+    <!-- 📖 Leer la Biblia (nueva) -->
+    <section id="biblia" class="section">
+      <h2>📖 Biblia Reina-Valera 1960</h2>
+      <p style="max-width:900px;margin:0 auto;text-align:center">Busca por <strong>Libro Capítulo:Versículo</strong> (ej. <em>Juan 3:16</em>, <em>Salmos 23</em>, <em>Génesis 1:1-5</em>) y el texto se mostrará aquí mismo.</p>
+
+      <div class="biblia-controls" style="margin-top:12px">
+        <!-- Búsqueda manual existente -->
+        <input id="refInput" type="text" placeholder="Ej: Juan 3:16 o Salmos 23" />
+        <button id="buscarBib" class="btn">Buscar</button>
+        <button id="cargarLista" class="btn outline" title="Cargar lista de libros">Cargar libros</button>
+      </div>
+
+      <!-- NUEVOS selects agregados sin eliminar lo anterior -->
+      <div style="max-width:900px;margin:12px auto;display:flex;gap:8px;flex-wrap:wrap;justify-content:center;">
+        <select id="bookSelect" aria-label="Seleccionar libro">
+          <option value="">-- Libro --</option>
+        </select>
+        <select id="chapterSelect" aria-label="Seleccionar capítulo" disabled>
+          <option value="">-- Capítulo --</option>
+        </select>
+        <select id="verseSelect" aria-label="Seleccionar versículo" disabled>
+          <option value="">-- Versículo --</option>
+        </select>
+        <button id="getSelectedVerse" class="btn">Ver</button>
+      </div>
+
+      <div style="text-align:center;margin-top:6px" class="small">
+        <span id="bibStatus">Intentando conectar con la Bolls Bible API...</span>
+      </div>
+
+      <div id="bibResult" class="result" aria-live="polite" style="display:none"></div>
+      <div id="bibBooksList" class="result" style="display:none;max-height:300px;overflow:auto"></div>
+    </section>
+
+    <!-- 🎶 Música (nueva) -->
+    <section id="musica" class="section">
+      <h2>🎶 Radio Cristiana — A los Pies de Cristo</h2>
+      <p>La emisora sonará aquí mismo. Si el navegador bloquea autoplay, usa el botón play.</p>
+      <div style="max-width:900px;margin:0 auto;text-align:center">
+        <!-- Fuente de ejemplo: si tienes la URL exacta del stream ponla aquí -->
+        <audio id="emisoraPlayer" controls>
+          <source src="https://stream.zeno.fm/3v1yx6drxrhvv" type="audio/mpeg">
+          Tu navegador no soporta el reproductor de audio.
+        </audio>
+        <div style="margin-top:8px">
+          <button id="playEmisora" class="btn">▶️ Reproducir</button>
+          <button id="pauseEmisora" class="btn outline">⏸️ Pausar</button>
+        </div>
+      </div>
+    </section>
+
     <!-- Contacto -->
     <section id="contacto" class="section">
       <h2>Contacto</h2>
@@ -229,75 +294,81 @@
   </footer>
 
   <script>
-    /* =================== SLIDER INFINITO =================== */
+    /* =================== SLIDER INFINITO (código original íntegro) =================== */
     const slider = document.getElementById('slider');
     const hero   = document.getElementById('hero');
     let slides, index = 1, intervalo, zoomActivo = false;
 
-    // Crear clones
-    const makeClones = () => {
-      const first = slider.children[0].cloneNode(true);
-      const last  = slider.children[slider.children.length - 1].cloneNode(true);
-      first.id = 'first-clone';
-      last.id  = 'last-clone';
-      slider.appendChild(first);
-      slider.insertBefore(last, slider.firstElementChild);
-    };
-    makeClones();
+    // Crear clones (si slider existe)
+    if(slider){
+      const makeClones = () => {
+        const first = slider.children[0].cloneNode(true);
+        const last  = slider.children[slider.children.length - 1].cloneNode(true);
+        first.id = 'first-clone';
+        last.id  = 'last-clone';
+        slider.appendChild(first);
+        slider.insertBefore(last, slider.firstElementChild);
+      };
+      try { makeClones(); } catch(e){}
 
-    slides = slider.querySelectorAll('.slide');
-    const transitionMs = 1000, pausaMs = 2000;
-
-    const setTransition = (on) => {
-      slider.style.transition = on ? `transform ${transitionMs}ms ease-in-out` : 'none';
-    };
-    const goToIndex = (i, withTransition = true) => {
-      if (zoomActivo) return; // si hay zoom no mover
-      setTransition(withTransition);
-      slider.style.transform = `translateX(-${i * 100}%)`;
-    };
-    goToIndex(index, false);
-
-    const siguiente = () => { index++; goToIndex(index, true); };
-    const anterior = () => { index--; goToIndex(index, true); };
-
-    slider.addEventListener('transitionend', () => {
       slides = slider.querySelectorAll('.slide');
-      if (slides[index]?.id === 'first-clone') {
-        index = slides.length - 2;
-        goToIndex(index, false);
-      } else if (slides[index]?.id === 'last-clone') {
-        index = 1;
-        goToIndex(index, false);
-      }
-    });
+      const transitionMs = 1000, pausaMs = 2000;
 
-    const start = () => { if (!zoomActivo) intervalo = setInterval(siguiente, pausaMs + transitionMs); };
-    const stop  = () => { clearInterval(intervalo); };
+      const setTransition = (on) => {
+        slider.style.transition = on ? `transform ${transitionMs}ms ease-in-out` : 'none';
+      };
+      const goToIndex = (i, withTransition = true) => {
+        if (zoomActivo) return; // si hay zoom no mover
+        setTransition(withTransition);
+        slider.style.transform = `translateX(-${i * 100}%)`;
+      };
+      goToIndex(index, false);
 
-    start();
+      const siguiente = () => { index++; goToIndex(index, true); };
+      const anterior = () => { index--; goToIndex(index, true); };
 
-    document.getElementById('next').addEventListener('click', () => { if (!zoomActivo){ stop(); siguiente(); start(); }});
-    document.getElementById('prev').addEventListener('click', () => { if (!zoomActivo){ stop(); anterior(); start(); }});
-
-    hero.addEventListener('mouseenter', () => { if (!zoomActivo) stop(); });
-    hero.addEventListener('mouseleave', () => { if (!zoomActivo) start(); });
-
-    // Zoom con click
-    document.querySelectorAll('.slide img').forEach(img => {
-      img.addEventListener('click', () => {
-        if (img.classList.contains('zoom')) {
-          img.classList.remove('zoom');
-          zoomActivo = false;
-          start();
-        } else {
-          document.querySelectorAll('.slide img').forEach(i => i.classList.remove('zoom'));
-          img.classList.add('zoom');
-          zoomActivo = true;
-          stop();
+      slider.addEventListener('transitionend', () => {
+        slides = slider.querySelectorAll('.slide');
+        if (slides[index]?.id === 'first-clone') {
+          index = slides.length - 2;
+          goToIndex(index, false);
+        } else if (slides[index]?.id === 'last-clone') {
+          index = 1;
+          goToIndex(index, false);
         }
       });
-    });
+
+      const start = () => { if (!zoomActivo) intervalo = setInterval(siguiente, pausaMs + transitionMs); };
+      const stop  = () => { clearInterval(intervalo); };
+
+      start();
+
+      const nextBtn = document.getElementById('next');
+      const prevBtn = document.getElementById('prev');
+      if(nextBtn) nextBtn.addEventListener('click', () => { if (!zoomActivo){ stop(); siguiente(); start(); }});
+      if(prevBtn) prevBtn.addEventListener('click', () => { if (!zoomActivo){ stop(); anterior(); start(); }});
+
+      if(hero){
+        hero.addEventListener('mouseenter', () => { if (!zoomActivo) stop(); });
+        hero.addEventListener('mouseleave', () => { if (!zoomActivo) start(); });
+      }
+
+      // Zoom con click
+      document.querySelectorAll('.slide img').forEach(img => {
+        img.addEventListener('click', () => {
+          if (img.classList.contains('zoom')) {
+            img.classList.remove('zoom');
+            zoomActivo = false;
+            start();
+          } else {
+            document.querySelectorAll('.slide img').forEach(i => i.classList.remove('zoom'));
+            img.classList.add('zoom');
+            zoomActivo = true;
+            stop();
+          }
+        });
+      });
+    }
 
     /* =================== NAVEGACIÓN ENTRE SECCIONES =================== */
     const navBtns  = document.querySelectorAll(".nav-btn");
@@ -306,6 +377,11 @@
     const showSection = (id) => {
       sections.forEach(sec => sec.classList.toggle("visible", sec.id === id));
       navBtns.forEach(btn => btn.classList.toggle("active", btn.dataset.section === id));
+      // pause music when leaving musica
+      if(id !== 'musica'){
+        const p = document.getElementById('emisoraPlayer');
+        if(p && !p.paused){ p.pause(); }
+      }
     };
 
     navBtns.forEach(btn => {
@@ -318,11 +394,425 @@
     const form = document.getElementById("contactForm");
     const formStatus = document.getElementById("formStatus");
 
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
-      formStatus.textContent = "✅ Mensaje enviado correctamente (demo)";
-      form.reset();
+    if(form){
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        formStatus.textContent = "✅ Mensaje enviado correctamente (demo)";
+        form.reset();
+      });
+    }
+
+    /* =================== EMISORA (controls) =================== */
+    const emisoraPlayer = document.getElementById('emisoraPlayer');
+    const playBtn = document.getElementById('playEmisora');
+    const pauseBtn = document.getElementById('pauseEmisora');
+    if(playBtn) playBtn.addEventListener('click', () => {
+      if(emisoraPlayer){
+        emisoraPlayer.play().catch(()=> {
+          alert('Tu navegador bloqueó la reproducción automática. Presiona play en el control de audio.');
+        });
+      }
     });
+    if(pauseBtn) pauseBtn.addEventListener('click', () => {
+      if(emisoraPlayer) emisoraPlayer.pause();
+    });
+
+    /* =================== BIBLIA (Bolls.life) =================== */
+    (function(){
+      const statusEl = document.getElementById('bibStatus');
+      const booksListEl = document.getElementById('bibBooksList');
+      const resultEl = document.getElementById('bibResult');
+      const input = document.getElementById('refInput');
+      const buscarBtn = document.getElementById('buscarBib');
+      const cargarBtn = document.getElementById('cargarLista');
+
+      // selects nuevos
+      const bookSelect = document.getElementById('bookSelect');
+      const chapterSelect = document.getElementById('chapterSelect');
+      const verseSelect = document.getElementById('verseSelect');
+      const getSelectedVerseBtn = document.getElementById('getSelectedVerse');
+
+      // Intentos de slug para RVR1960 - la API usa slugs; tratamos varios nombres comunes.
+      const triedSlugs = ['RVR1960','RVR','RVR60','RVR_1960','RVR-1960','RVR1960-R','RVR1960_ES','ReinaValera1960','RVR1960_ESP'];
+
+      let chosenSlug = null;
+      let booksMap = null; // array with book objects {bookid, name, chapters}
+
+      // normalizar texto (para matching simple)
+      const normalize = s => s ? s.toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '') : '';
+
+      // función para intentar cargar libros con un slug dado
+      const tryLoadBooks = async (slug) => {
+        const url = `https://bolls.life/get-books/${slug}/`;
+        try {
+          const res = await fetch(url, {mode:'cors'});
+          if(!res.ok) throw new Error('no ok');
+          const data = await res.json();
+          if(Array.isArray(data) && data.length>0){
+            return data;
+          }
+          // algunos endpoints devuelven objeto con .books
+          if(data && data.books) return data.books;
+          return null;
+        } catch (e) {
+          return null;
+        }
+      };
+
+      // intenta varios slugs y elige el primero que funcione
+      const discoverSlug = async () => {
+        statusEl.textContent = 'Buscando la traducción RVR en bolls.life...';
+        for(const s of triedSlugs){
+          statusEl.textContent = `Probando traducción '${s}'...`;
+          const books = await tryLoadBooks(s);
+          if(books){
+            chosenSlug = s;
+            booksMap = books;
+            statusEl.textContent = `Traducción encontrada: ${s} — lista de libros cargada.`;
+            return true;
+          }
+        }
+        statusEl.textContent = 'No se encontró automáticamente la RVR. Si no carga, prueba con otro slug disponible en bolls.life.';
+        return false;
+      };
+
+      // función para mostrar lista de libros (para ayuda)
+      const renderBooksList = () => {
+        if(!booksMap) { booksListEl.style.display='none'; return; }
+        booksListEl.style.display='block';
+        booksListEl.innerHTML = `<strong>Libros disponibles (traducción: ${chosenSlug}) — haga clic para copiar nombre:</strong><br><small>(use el nombre mostrado en la búsqueda)</small><hr>`;
+        booksMap.forEach(b=>{
+          const btn = document.createElement('div');
+          btn.style.padding='6px'; btn.style.cursor='pointer'; btn.style.borderBottom='1px solid #eee';
+          btn.textContent = `${b.bookid} — ${b.name} (${b.chapters} cap.)`;
+          btn.addEventListener('click', ()=> {
+            input.value = b.name + ' 1';
+            window.scrollTo({top: document.getElementById('biblia').offsetTop - 60, behavior:'smooth'});
+          });
+          booksListEl.appendChild(btn);
+        });
+      };
+
+      // Llena el select de libros (orden alfabético por nombre mostrado)
+      const populateBookSelect = () => {
+        if(!bookSelect || !booksMap) return;
+        // limpiar y agregar opción inicial
+        bookSelect.innerHTML = '<option value="">-- Libro --</option>';
+        // ordenar por nombre (normalizado)
+        const sorted = [...booksMap].sort((a,b) => {
+          const na = normalize(a.name), nb = normalize(b.name);
+          return na.localeCompare(nb);
+        });
+        sorted.forEach(b => {
+          const opt = document.createElement('option');
+          // guardamos bookid en value (mejor para llamadas a la API)
+          // pero mostramos el nombre para el usuario
+          opt.value = b.bookid + '||' + b.name; // valor combinado (bookid||displayName)
+          opt.textContent = b.name;
+          bookSelect.appendChild(opt);
+        });
+      };
+
+      // parsea el value combinado y devuelve objeto {bookid,name,chapters}
+      const getBookObjFromSelectValue = (val) => {
+        if(!val) return null;
+        const [bookid, ...nameParts] = val.split('||');
+        const name = nameParts.join('||');
+        const bookObj = booksMap && booksMap.find(b => b.bookid === bookid || b.name === name);
+        return bookObj || null;
+      };
+
+      // fetch de capítulo completo y retorno como array de versos [{verse, text},...]
+      const fetchChapter = async (slug, bookid, chapterNum) => {
+        // algunos endpoints usan get-text, otros get-chapter; probamos get-text primero
+        const url1 = `https://bolls.life/get-text/${slug}/${bookid}/${chapterNum}/`;
+        const url2 = `https://bolls.life/get-chapter/${slug}/${bookid}/${chapterNum}/`;
+        try {
+          let res = await fetch(url1, {mode:'cors'});
+          if(res.ok){
+            const data = await res.json();
+            // data puede venir directamente como array o dentro de objeto
+            if(Array.isArray(data)) return data;
+            if(data && data.verses) return data.verses;
+            if(data && data.text) return data.text;
+            return data;
+          }
+        } catch(e){}
+        // fallback url2
+        try {
+          let res2 = await fetch(url2, {mode:'cors'});
+          if(res2.ok){
+            const data2 = await res2.json();
+            if(Array.isArray(data2)) return data2;
+            if(data2 && data2.verses) return data2.verses;
+            return data2;
+          }
+        } catch(e){}
+        throw new Error('No se pudo obtener capítulo (ambos endpoints fallaron).');
+      };
+
+      // render de los versos solicitados (versículos individuales o rango)
+      const renderVerses = (versesArr, verseRange=null, title='') => {
+        if(!resultEl) return;
+        resultEl.style.display='block';
+        resultEl.innerHTML = '';
+        if(title) resultEl.insertAdjacentHTML('beforeend', `<h3 style="margin-top:0">${title}</h3>`);
+        if(!Array.isArray(versesArr) || versesArr.length===0){
+          resultEl.innerHTML += '<em>No se encontraron versos.</em>';
+          return;
+        }
+        const toShow = verseRange ? versesArr.filter(v => v.verse >= verseRange.start && v.verse <= verseRange.end) : versesArr;
+        toShow.forEach(v => {
+          const div = document.createElement('div');
+          div.className = 'verse';
+          div.innerHTML = `<strong>${v.verse}.</strong> ${v.text}`;
+          resultEl.appendChild(div);
+        });
+      };
+
+      // función principal que procesa la búsqueda textual (ej: "Juan 3:16" o "Salmos 23")
+      const doSearch = async (raw) => {
+        if(!resultEl || !statusEl) return;
+        resultEl.style.display='none';
+        resultEl.innerHTML = '';
+        if(!booksMap){
+          statusEl.textContent = 'La lista de libros no está cargada. Cargando ahora...';
+          const ok = await discoverSlug();
+          if(!ok){
+            statusEl.textContent = 'No se pudo detectar automáticamente la RVR en bolls.life. Presiona "Cargar libros" para ver opciones o revisa conexión.';
+            return;
+          } else {
+            renderBooksList();
+            populateBookSelect();
+          }
+        }
+        statusEl.textContent = 'Procesando referencia...';
+        const parsed = parseReference(raw);
+        if(!parsed){
+          statusEl.textContent = 'Referencia no reconocida. Usa formato: Libro Capítulo[:Versículo[-Versículo]]. Ej: Juan 3:16 o Salmos 23';
+          return;
+        }
+        const {bookName, chapVers} = parsed;
+        const bookObj = findBookByName(bookName);
+        if(!bookObj){
+          statusEl.textContent = `No se encontró el libro "${bookName}" en la traducción (${chosenSlug}). Intenta con el nombre completo del libro.`;
+          return;
+        }
+        // parse chapVers: puede ser "3:16" o "23" o "1:1-5"
+        let chapter = null;
+        let range = null;
+        const m = chapVers.match(/^(\d+)(?::(\d+(?:-\d+)?))?$/);
+        if(m){
+          chapter = parseInt(m[1],10);
+          if(m[2]){
+            const r = m[2];
+            if(r.includes('-')){
+              const [a,b] = r.split('-').map(x=>parseInt(x,10));
+              range = {start: a, end: b};
+            } else {
+              range = {start: parseInt(r,10), end: parseInt(r,10)};
+            }
+          }
+        } else {
+          const onlyNum = chapVers.match(/^(\d+)$/);
+          if(onlyNum) chapter = parseInt(onlyNum[1],10);
+        }
+        if(!chapter){
+          statusEl.textContent = 'No reconocí el número de capítulo. Usa: Libro N o Libro N:M';
+          return;
+        }
+        statusEl.textContent = `Cargando ${bookObj.name} ${chapter} (${chosenSlug})...`;
+        try {
+          const chapData = await fetchChapter(chosenSlug, bookObj.bookid, chapter);
+          renderVerses(chapData, range, `${bookObj.name} ${chapter}`);
+          statusEl.textContent = `Mostrando ${bookObj.name} ${chapter}${range ? ' - versos ' + range.start + (range.end?('-'+range.end):'') : ''}`;
+        } catch (e) {
+          console.error(e);
+          statusEl.textContent = 'Error al obtener el capítulo desde la API.';
+        }
+      };
+
+      // Parse a reference string like "Juan 3:16" or "Salmos 23" or "Génesis 1:1-5"
+      const parseReference = (refRaw) => {
+        if(!refRaw) return null;
+        let ref = refRaw.trim();
+        // reemplazos comunes
+        ref = ref.replace(/\s+de\s+/i,' ').replace(/\./g,'').replace(/,/,':');
+        // buscar patrón libro (texto) seguido de espacio y números
+        const m = ref.match(/^([^\d:]+)\s+(.+)$/);
+        if(!m) {
+          // maybe user typed "Juan3:16"
+          const m2 = ref.match(/^([^\d]+)(\d.*)$/);
+          if(m2) return {bookName: m2[1].trim(), chapVers: m2[2].trim()};
+          return null;
+        }
+        return {bookName: m[1].trim(), chapVers: m[2].trim()};
+      };
+
+      // buscar bookid por matching de nombre (intenta varias coincidencias)
+      const findBookByName = (name) => {
+        if(!booksMap) return null;
+        const n = normalize(name);
+        // primera pasada: nombre completo que empiece igual
+        let found = booksMap.find(b => normalize(b.name).startsWith(n));
+        if(found) return found;
+        // segunda: coincidencia parcial anywhere
+        found = booksMap.find(b => normalize(b.name).includes(n));
+        if(found) return found;
+        // tercera: buscar por abreviaturas comunes
+        const map = booksMap.map(b => ({b, n: normalize(b.name)}));
+        for(const item of map){
+          if(item.n.startsWith(n) || item.n === n) return item.b;
+        }
+        return null;
+      };
+
+      // eventos UI
+      if(buscarBtn){
+        buscarBtn.addEventListener('click', () => {
+          const v = input.value.trim();
+          if(!v){ statusEl.textContent = 'Escribe una referencia (ej: Juan 3:16).'; return; }
+          doSearch(v);
+        });
+      }
+      if(input){
+        input.addEventListener('keydown', (e) => {
+          if(e.key === 'Enter'){ e.preventDefault(); if(buscarBtn) buscarBtn.click(); }
+        });
+      }
+
+      if(cargarBtn){
+        cargarBtn.addEventListener('click', async () => {
+          if(!booksMap){
+            const ok = await discoverSlug();
+            if(!ok){ statusEl.textContent = 'No se pudo cargar la lista de libros automáticamente.'; return; }
+          }
+          renderBooksList();
+          populateBookSelect();
+        });
+      }
+
+      // seleccionar libro -> cargar capítulos
+      if(bookSelect){
+        bookSelect.addEventListener('change', () => {
+          chapterSelect.innerHTML = '<option value="">-- Capítulo --</option>';
+          verseSelect.innerHTML = '<option value="">-- Versículo --</option>';
+          verseSelect.disabled = true;
+          const val = bookSelect.value;
+          const bookObj = getBookObjFromSelectValue(val);
+          if(!bookObj){
+            chapterSelect.disabled = true;
+            return;
+          }
+          // usar bookObj.chapters si existe, si no fallback heurístico
+          let chaptersCount = bookObj.chapters || 40;
+          // asegurar límites razonables
+          if(chaptersCount > 150) chaptersCount = 150;
+          for(let i=1;i<=chaptersCount;i++){
+            const opt = document.createElement('option');
+            opt.value = i;
+            opt.textContent = i;
+            chapterSelect.appendChild(opt);
+          }
+          chapterSelect.disabled = false;
+        });
+      }
+
+      // seleccionar capítulo -> cargar versículos (consultando la API para contar versos)
+      if(chapterSelect){
+        chapterSelect.addEventListener('change', async () => {
+          verseSelect.innerHTML = '<option value="">-- Versículo --</option>';
+          verseSelect.disabled = true;
+          const bookVal = bookSelect.value;
+          const bookObj = getBookObjFromSelectValue(bookVal);
+          const chap = chapterSelect.value;
+          if(!bookObj || !chap) return;
+          // consultamos el capítulo para obtener la lista de versos
+          statusEl.textContent = `Cargando versos de ${bookObj.name} ${chap}...`;
+          try {
+            const chapterData = await fetchChapter(chosenSlug, bookObj.bookid, chap);
+            // chapterData puede ser array de versos
+            const versesArray = Array.isArray(chapterData) ? chapterData : (chapterData.verses || []);
+            const maxVerses = versesArray.length || 50;
+            for(let i=1;i<=maxVerses;i++){
+              const opt = document.createElement('option');
+              opt.value = i;
+              opt.textContent = i;
+              verseSelect.appendChild(opt);
+            }
+            verseSelect.disabled = false;
+            statusEl.textContent = `Versos cargados: ${bookObj.name} ${chap}`;
+            // guardamos el capítulo completo en resultEl? no; solo cargamos versículos
+          } catch(e){
+            console.error(e);
+            statusEl.textContent = 'Error cargando versos del capítulo.';
+            // fallback: poblar hasta 50
+            for(let i=1;i<=50;i++){
+              const opt = document.createElement('option');
+              opt.value = i;
+              opt.textContent = i;
+              verseSelect.appendChild(opt);
+            }
+            verseSelect.disabled = false;
+          }
+        });
+      }
+
+      // botón Ver: muestra el versículo seleccionado
+      if(getSelectedVerseBtn){
+        getSelectedVerseBtn.addEventListener('click', async () => {
+          const bookVal = bookSelect.value;
+          const chap = chapterSelect.value;
+          const verse = verseSelect.value;
+          if(!bookVal || !chap || !verse){
+            statusEl.textContent = 'Selecciona libro, capítulo y versículo.';
+            return;
+          }
+          const bookObj = getBookObjFromSelectValue(bookVal);
+          if(!bookObj){
+            statusEl.textContent = 'Libro no encontrado.';
+            return;
+          }
+          statusEl.textContent = `Cargando ${bookObj.name} ${chap}:${verse}...`;
+          try {
+            const chapterData = await fetchChapter(chosenSlug, bookObj.bookid, chap);
+            const versesArray = Array.isArray(chapterData) ? chapterData : (chapterData.verses || []);
+            const vnum = parseInt(verse,10);
+            const found = versesArray.find(v => parseInt(v.verse,10) === vnum);
+            if(found){
+              renderVerses([found], null, `${bookObj.name} ${chap}:${verse}`);
+              statusEl.textContent = `Mostrando ${bookObj.name} ${chap}:${verse}`;
+            } else {
+              // si no encontró por número, mostrar por índice (vnum-1)
+              const alt = versesArray[vnum-1];
+              if(alt){
+                renderVerses([alt], null, `${bookObj.name} ${chap}:${verse}`);
+                statusEl.textContent = `Mostrando ${bookObj.name} ${chap}:${verse}`;
+              } else {
+                statusEl.textContent = 'No se encontró el versículo en la respuesta de la API.';
+                resultEl.innerHTML = '<em>No se encontró el versículo.</em>';
+              }
+            }
+          } catch(e){
+            console.error(e);
+            statusEl.textContent = 'Error al obtener el versículo.';
+            resultEl.innerHTML = '<em>Error al obtener el versículo.</em>';
+          }
+        });
+      }
+
+      // al cargar la página: intenta descubrir automáticamente la traducción y cargar libros (sin bloquear la UI)
+      (async function init(){
+        const ok = await discoverSlug();
+        if(ok){
+          renderBooksList();
+          populateBookSelect();
+        } else {
+          statusEl.textContent = 'No se detectó la traducción RVR automáticamente. Presiona "Cargar libros" para intentar manualmente.';
+        }
+      })();
+
+    })();
   </script>
 </body>
 </html>
